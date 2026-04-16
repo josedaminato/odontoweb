@@ -1093,23 +1093,61 @@
       VARIABLES EDITABLES (plantilla por cliente)
       ===========================================
       Reemplazá los valores conservando el formato de string.
-      NOTA: Se mantiene el nombre solicitado entre llaves como referencia.
+      NOTA: Si dejás los placeholders sin reemplazar, el sitio muestra valores de DEMO para que el link público se vea completo.
     */
-    const NOMBRE = "{{NOMBRE}}";
-    const CLINICA = "{{CLINICA}}";
-    const ESPECIALIDAD = "{{ESPECIALIDAD}}";
-    const MATRICULA = "{{MATRICULA}}";
-    const CIUDAD = "{{CIUDAD}}";
-    const TAGLINE = "{{TAGLINE}}";
-    const BIO = "{{BIO}}";
-    const WHATSAPP = "{{WHATSAPP}}";
-    const EMAIL = "{{EMAIL}}";
-    const INSTAGRAM = "{{INSTAGRAM}}";
-    const DIRECCION = "{{DIRECCION}}";
-    const HORARIOS = "{{HORARIOS}}";
-    const ANIOS_EXPERIENCIA = "{{AÑOS_EXPERIENCIA}}";
-    const PACIENTES = "{{PACIENTES}}";
-    const HONORARIOS = "{{HONORARIOS}}";
+    const DEFAULTS = {
+      NOMBRE: "Dr. Martín Álvarez",
+      CLINICA: "Sonrisa Dental",
+      ESPECIALIDAD: "Odontólogo General y Estético",
+      MATRICULA: "M.P. 8821",
+      CIUDAD: "Mendoza, Argentina",
+      TAGLINE: "Tu sonrisa merece el mejor cuidado",
+      BIO:
+        "Soy el Dr. Martín Álvarez, odontólogo con enfoque integral: cuidamos tu salud y también la estética con tratamientos personalizados. Trabajamos con tecnología digital y un plan claro para que te sientas en confianza desde el primer día.",
+      WHATSAPP: "5492614000000",
+      EMAIL: "turnos@sonrisadental.com",
+      INSTAGRAM: "@sonrisadental",
+      DIRECCION: "Av. San Martín 450, Mendoza",
+      HORARIOS: "Lunes a Viernes 9hs – 19hs / Sábados 9hs – 13hs",
+      ANIOS_EXPERIENCIA: "12",
+      PACIENTES: "2.000+",
+      HONORARIOS: "Consulta desde $X · Cuotas sin interés"
+    };
+
+    const isPlaceholder = (v) =>
+      typeof v === "string" && v.trim().startsWith("{{") && v.trim().endsWith("}}");
+
+    const NOMBRE_RAW = "{{NOMBRE}}";
+    const CLINICA_RAW = "{{CLINICA}}";
+    const ESPECIALIDAD_RAW = "{{ESPECIALIDAD}}";
+    const MATRICULA_RAW = "{{MATRICULA}}";
+    const CIUDAD_RAW = "{{CIUDAD}}";
+    const TAGLINE_RAW = "{{TAGLINE}}";
+    const BIO_RAW = "{{BIO}}";
+    const WHATSAPP_RAW = "{{WHATSAPP}}";
+    const EMAIL_RAW = "{{EMAIL}}";
+    const INSTAGRAM_RAW = "{{INSTAGRAM}}";
+    const DIRECCION_RAW = "{{DIRECCION}}";
+    const HORARIOS_RAW = "{{HORARIOS}}";
+    const ANIOS_EXPERIENCIA_RAW = "{{AÑOS_EXPERIENCIA}}";
+    const PACIENTES_RAW = "{{PACIENTES}}";
+    const HONORARIOS_RAW = "{{HONORARIOS}}";
+
+    const NOMBRE = isPlaceholder(NOMBRE_RAW) ? DEFAULTS.NOMBRE : NOMBRE_RAW;
+    const CLINICA = isPlaceholder(CLINICA_RAW) ? DEFAULTS.CLINICA : CLINICA_RAW;
+    const ESPECIALIDAD = isPlaceholder(ESPECIALIDAD_RAW) ? DEFAULTS.ESPECIALIDAD : ESPECIALIDAD_RAW;
+    const MATRICULA = isPlaceholder(MATRICULA_RAW) ? DEFAULTS.MATRICULA : MATRICULA_RAW;
+    const CIUDAD = isPlaceholder(CIUDAD_RAW) ? DEFAULTS.CIUDAD : CIUDAD_RAW;
+    const TAGLINE = isPlaceholder(TAGLINE_RAW) ? DEFAULTS.TAGLINE : TAGLINE_RAW;
+    const BIO = isPlaceholder(BIO_RAW) ? DEFAULTS.BIO : BIO_RAW;
+    const WHATSAPP = isPlaceholder(WHATSAPP_RAW) ? DEFAULTS.WHATSAPP : WHATSAPP_RAW;
+    const EMAIL = isPlaceholder(EMAIL_RAW) ? DEFAULTS.EMAIL : EMAIL_RAW;
+    const INSTAGRAM = isPlaceholder(INSTAGRAM_RAW) ? DEFAULTS.INSTAGRAM : INSTAGRAM_RAW;
+    const DIRECCION = isPlaceholder(DIRECCION_RAW) ? DEFAULTS.DIRECCION : DIRECCION_RAW;
+    const HORARIOS = isPlaceholder(HORARIOS_RAW) ? DEFAULTS.HORARIOS : HORARIOS_RAW;
+    const ANIOS_EXPERIENCIA = isPlaceholder(ANIOS_EXPERIENCIA_RAW) ? DEFAULTS.ANIOS_EXPERIENCIA : ANIOS_EXPERIENCIA_RAW;
+    const PACIENTES = isPlaceholder(PACIENTES_RAW) ? DEFAULTS.PACIENTES : PACIENTES_RAW;
+    const HONORARIOS = isPlaceholder(HONORARIOS_RAW) ? DEFAULTS.HONORARIOS : HONORARIOS_RAW;
 
     const WHATSAPP_URL = `https://wa.me/${WHATSAPP}?text=Hola,%20quiero%20sacar%20un%20turno`;
 
