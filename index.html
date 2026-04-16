@@ -52,6 +52,20 @@
       overflow-x: hidden;
     }
 
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20% -10%;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(320px 180px at 12% 20%, rgba(46, 184, 230, 0.18), transparent 72%),
+        radial-gradient(300px 170px at 85% 28%, rgba(61, 217, 164, 0.13), transparent 72%),
+        radial-gradient(360px 190px at 62% 78%, rgba(26, 60, 110, 0.08), transparent 72%);
+      animation: bgFlow 16s ease-in-out infinite alternate;
+      transform: translate3d(0, 0, 0);
+    }
+
     img,
     svg {
       max-width: 100%;
@@ -208,6 +222,14 @@
 
     .nav-links a:hover { color: var(--color-primary); }
 
+    .nav-links a.is-active {
+      color: var(--color-primary);
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-color: rgba(46, 184, 230, 0.75);
+      text-underline-offset: 5px;
+    }
+
     .nav-actions {
       display: flex;
       align-items: center;
@@ -341,6 +363,7 @@
       min-height: 420px;
       position: relative;
       isolation: isolate;
+      animation: floatSoft 4.4s ease-in-out infinite;
     }
 
     .smile-orb,
@@ -383,6 +406,7 @@
       top: 16%;
       background: linear-gradient(135deg, var(--color-accent), var(--color-mint));
       box-shadow: 0 8px 16px rgba(46, 184, 230, 0.4);
+      animation: pulseGlow 2.8s ease-in-out infinite;
     }
 
     .section-header {
@@ -404,6 +428,8 @@
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
       position: relative;
       overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
     }
 
     .service-card::before {
@@ -580,6 +606,12 @@
       border-radius: var(--radius-md);
       padding: 1rem 0.85rem;
       box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .timeline-step:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 30px rgba(16, 37, 68, 0.16);
     }
 
     .step-number {
@@ -622,6 +654,13 @@
       border-radius: var(--radius-md);
       padding: 1.1rem;
       backdrop-filter: blur(4px);
+      transition: transform var(--transition), border-color var(--transition), background var(--transition);
+    }
+
+    .tech-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(61, 217, 164, 0.52);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .tech-icon {
@@ -759,6 +798,27 @@
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatSoft {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 8px 16px rgba(46, 184, 230, 0.4);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 12px 26px rgba(46, 184, 230, 0.55);
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes bgFlow {
+      0% { transform: translate3d(-1%, -1%, 0) scale(1); }
+      100% { transform: translate3d(1.5%, 1%, 0) scale(1.04); }
     }
 
     @media (max-width: 1060px) {
@@ -1117,19 +1177,19 @@
     const isPlaceholder = (v) =>
       typeof v === "string" && v.trim().startsWith("{{") && v.trim().endsWith("}}");
 
-    const NOMBRE_RAW = "{{NOMBRE}}";
-    const CLINICA_RAW = "{{CLINICA}}";
-    const ESPECIALIDAD_RAW = "{{ESPECIALIDAD}}";
-    const MATRICULA_RAW = "{{MATRICULA}}";
-    const CIUDAD_RAW = "{{CIUDAD}}";
-    const TAGLINE_RAW = "{{TAGLINE}}";
-    const BIO_RAW = "{{BIO}}";
+    const NOMBRE_RAW = "Efraín Oporto Torres";
+    const CLINICA_RAW = "Efraín Oporto Torres";
+    const ESPECIALIDAD_RAW = "Cirujano Dentista | APS | Salud | Odontología | Liderazgo | SSMC | Endodoncia UC";
+    const MATRICULA_RAW = "M.P. 8821";
+    const CIUDAD_RAW = "Gran Santiago, Región Metropolitana de Santiago, Chile";
+    const TAGLINE_RAW = "Odontología moderna y cercana";
+    const BIO_RAW = "Soy Efraín Oporto Torres, cirujano dentista con experiencia en APS, salud pública, liderazgo y endodoncia. Trabajo con un enfoque cercano para brindar atención odontológica de calidad en Gran Santiago.";
     const WHATSAPP_RAW = "{{WHATSAPP}}";
     const EMAIL_RAW = "{{EMAIL}}";
     const INSTAGRAM_RAW = "{{INSTAGRAM}}";
     const DIRECCION_RAW = "{{DIRECCION}}";
     const HORARIOS_RAW = "{{HORARIOS}}";
-    const ANIOS_EXPERIENCIA_RAW = "{{AÑOS_EXPERIENCIA}}";
+    const ANIOS_EXPERIENCIA_RAW = "4";
     const PACIENTES_RAW = "{{PACIENTES}}";
     const HONORARIOS_RAW = "{{HONORARIOS}}";
 
@@ -1290,11 +1350,56 @@
       });
     }
 
+    function setupActiveSectionLinks() {
+      const sections = document.querySelectorAll("main section[id]");
+      const links = document.querySelectorAll('.nav-links a[href^="#"]');
+      if (!sections.length || !links.length) return;
+
+      const updateActive = (id) => {
+        links.forEach((link) => {
+          const isMatch = link.getAttribute("href") === `#${id}`;
+          link.classList.toggle("is-active", isMatch);
+        });
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            updateActive(entry.target.id);
+          }
+        });
+      }, { rootMargin: "-36% 0px -50% 0px", threshold: 0.1 });
+
+      sections.forEach((section) => observer.observe(section));
+    }
+
+    function setupCardTilt() {
+      const cards = document.querySelectorAll(".service-card");
+      if (!cards.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      cards.forEach((card) => {
+        card.addEventListener("mousemove", (event) => {
+          const bounds = card.getBoundingClientRect();
+          const px = (event.clientX - bounds.left) / bounds.width;
+          const py = (event.clientY - bounds.top) / bounds.height;
+          const rx = (0.5 - py) * 8;
+          const ry = (px - 0.5) * 10;
+          card.style.transform = `translateY(-6px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
+      });
+    }
+
     bindTemplateData();
     setupNavbarState();
     setupMobileMenu();
     setupRevealAnimations();
     setupCounterObserver();
+    setupActiveSectionLinks();
+    setupCardTilt();
   </script>
 </body>
 </html>
